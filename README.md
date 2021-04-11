@@ -24,6 +24,6 @@ There are four projects in the solution
     Web Api test project for StateTracker Web api
 
 ## Azure Deployment
-The State Tracker Web Api has been deployed to Azure and is available here: 
+The State Tracker Web Api has been deployed to Azure and is available here: https://ofxcodeexercisebattleshipapistatetracker20210411204905.azurewebsites.net/swagger/index.html
 
 ##
