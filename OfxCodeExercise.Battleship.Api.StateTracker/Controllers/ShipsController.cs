@@ -57,7 +57,6 @@ namespace OfxCodeExercise.Battleship.Api.StateTracker.Controllers
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
             }
-            
         }
 
         /// <summary>
@@ -70,21 +69,28 @@ namespace OfxCodeExercise.Battleship.Api.StateTracker.Controllers
         /// <response code="404">The board could not be found.</response>
         /// <response code="500">An internal service error has occurred</response>
         [HttpPut("attack")]
-        [Produces(typeof(bool))]
-        [ProducesResponseType(typeof(bool), 200)]
+        [Produces(typeof(AttackRequest))]
+        [ProducesResponseType(typeof(AttackResponse), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public ActionResult<AttackResponse> Attack(AttackRequest model)
         {
-            var isHit = _battleshipProvider.Attack(model.BoardId, model.AttackAt);
-
-            return Ok(new AttackResponse
+            try
             {
-                BoardId = model.BoardId,
-                AttackAt = model.AttackAt,
-                IsHit = isHit
-            }) ;
+                var isHit = _battleshipProvider.Attack(model.BoardId, model.AttackAt);
+
+                return Ok(new AttackResponse
+                {
+                    BoardId = model.BoardId,
+                    AttackAt = model.AttackAt,
+                    IsHit = isHit
+                });
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
     }
 }

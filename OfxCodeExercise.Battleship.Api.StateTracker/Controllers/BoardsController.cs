@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OfxCodeExercise.Battleship.Lib;
 using OfxCodeExercise.Battleship.Api.StateTracker.ViewModel;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace OfxCodeExercise.Battleship.Api.StateTracker.Controllers
 {
@@ -30,14 +32,21 @@ namespace OfxCodeExercise.Battleship.Api.StateTracker.Controllers
         /// <response code="400">There was something wrong with the request.</response>
         /// <response code="500">An internal service error has occurred</response>
         [HttpPost]
-        [Produces(typeof(BoardViewModel))]
+        [Produces(typeof(CreateBoardRequest))]
         [ProducesResponseType(typeof(BoardViewModel), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public ActionResult<BoardViewModel> Create([FromBody] CreateBoardRequest model)
         {
-            var board = _battleshipProvider.CreateBoard(model.ToBoard());
-            return Ok(new BoardViewModel(board));
+            try
+            {
+                var board = _battleshipProvider.CreateBoard(model.ToBoard());
+                return Ok(new BoardViewModel(board));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { error = ex.Message });
+            }
         }
     }
 }
